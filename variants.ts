@@ -22,3 +22,17 @@ export const BLUR_BUTTON_VARIANT = {
     opacity: 1,
   },
 };
+
+export const columnVariant = {
+  start: {},
+  show: {},
+};
+
+export const columnChildVariant = {
+  start: {
+    opacity: 0,
+  },
+  show: {
+    opacity: 1,
+  },
+};
