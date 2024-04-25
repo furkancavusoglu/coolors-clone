@@ -16,7 +16,7 @@ export default function Home() {
 
   const animateWithRandomColors = useCallback(
     async (target: string) => {
-      while (true) {
+      while (scope.current) {
         const color = getRandomColor();
         await animate(
           target,
