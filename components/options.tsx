@@ -39,7 +39,7 @@ export default function Options({
         .writeText(`${colorToCopy}`)
         .then(() => {
           toast({
-            description: `Color copied to clipboard ${colorToCopy} successfully!`,
+            description: `Color copied to clipboard successfully!`,
             duration: 2000,
           });
         })
