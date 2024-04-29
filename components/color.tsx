@@ -6,6 +6,12 @@ import Options from "./options";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { motion } from "framer-motion";
 import { columnChildVariant, columnVariant } from "@/variants";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function Color({
   color,
@@ -20,9 +26,9 @@ export default function Color({
   lockedHexes: string[];
   setLockedHexes: (value: string[]) => void;
 }) {
-  const [colorInstance, setColorInstance] = useState<string>(`#${color}`);
-
   extend([namesPlugin]);
+  const [colorInstance, setColorInstance] = useState<string>(`#${color}`);
+  
   const colorName = useMemo<string | undefined>(
     () => colord(colorInstance).toName({ closest: true }),
     [colorInstance, colord]
@@ -40,24 +46,35 @@ export default function Color({
       initial={"start"}
       whileHover={"show"}
       variants={columnVariant}
-      className="lg:w-1/5 lg:h-full lg:p-0 w-full pr-4 h-1/5 relative flex 
+      className="h-full lg:p-0 w-full pr-4 relative flex 
       flex-row justify-center items-center"
       style={{ backgroundColor: `${colorInstance}` }}
     >
-      <div className="lg:absolute lg:items-center bottom-14 left-0 flex flex-col w-full mb-1 pl-4">
-        <h3
-          className={`text-xl lg:text-[1.5rem] uppercase font-semibold 
+      <div
+        className="lg:absolute lg:items-center lg:pl-0 bottom-14 left-0 
+      flex flex-col w-full mb-1 pl-4"
+      >
+        <TooltipProvider delayDuration={500}>
+          <Tooltip>
+            <TooltipTrigger>
+              <h3
+                className={`text-xl lg:text-[1.5rem] uppercase font-semibold 
         cursor-pointer text-left ${textColor}`}
-        >
-          {colorInstance.replace(/^#/, "")}
-        </h3>
+              >
+                {colorInstance.replace(/^#/, "")}
+              </h3>
+            </TooltipTrigger>
+            <TooltipContent>Select Color</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
         <p
           className={`text-[11px] opacity-[0.5] capitalize inset-0 mt-[9px] ${textColor}`}
         >
           {`~${colorName}`}
         </p>
       </div>
-      
+
       {isDesktop ? (
         <motion.div variants={columnChildVariant}>
           <Options color={colorInstance} />

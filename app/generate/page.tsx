@@ -24,7 +24,7 @@ export default function Generate() {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      router.push(`/colors/${colorsRoute}`);
+      router.replace(`/colors/${colorsRoute}`);
     }, 2000);
 
     return () => clearTimeout(timeout);
