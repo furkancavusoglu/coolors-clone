@@ -9,13 +9,16 @@ import {
 import { handleIconColor } from "@/lib/utils";
 import { useParams, useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
+import { DragControls } from "framer-motion";
 
 export default function Options({
   color,
   lockedHexes,
+  controls,
 }: {
   color: string;
   lockedHexes: string[];
+  controls: DragControls;
 }) {
   const { slug } = useParams<{ slug: string }>();
   const iconColor = handleIconColor(color);
@@ -79,7 +82,9 @@ export default function Options({
       <TooltipProvider delayDuration={500}>
         <Tooltip>
           <TooltipTrigger>
-            <DragIcon currentColor={iconColor} />
+            <div onPointerDown={(e) => controls.start(e)}>
+              <DragIcon currentColor={iconColor} />
+            </div>
           </TooltipTrigger>
           <TooltipContent>Drag Color</TooltipContent>
         </Tooltip>

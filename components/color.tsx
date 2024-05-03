@@ -4,7 +4,7 @@ import namesPlugin from "colord/plugins/names";
 import { handleColorTextClass } from "@/lib/utils";
 import Options from "./options";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { motion } from "framer-motion";
+import { Reorder, motion, useDragControls } from "framer-motion";
 import { columnChildVariant, columnVariant } from "@/variants";
 import {
   Tooltip,
@@ -28,7 +28,9 @@ export default function Color({
 }) {
   extend([namesPlugin]);
   const [colorInstance, setColorInstance] = useState<string>(`#${color}`);
-  
+  const [draggable, setDraggable] = useState<boolean>(false);
+  const controls = useDragControls();
+
   const colorName = useMemo<string | undefined>(
     () => colord(colorInstance).toName({ closest: true }),
     [colorInstance, colord]
@@ -42,13 +44,17 @@ export default function Color({
   const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   return (
-    <motion.div
+    <Reorder.Item
       initial={"start"}
       whileHover={"show"}
       variants={columnVariant}
       className="h-full lg:p-0 w-full pr-4 relative flex 
       flex-row justify-center items-center"
       style={{ backgroundColor: `${colorInstance}` }}
+      key={color}
+      value={color}
+      dragListener={draggable}
+      dragControls={controls}
     >
       <div
         className="lg:absolute lg:items-center lg:pl-0 bottom-14 left-0 
@@ -77,11 +83,11 @@ export default function Color({
 
       {isDesktop ? (
         <motion.div variants={columnChildVariant}>
-          <Options color={colorInstance} />
+          <Options color={colorInstance} controls={controls} />
         </motion.div>
       ) : (
-        <Options color={colorInstance} />
+        <Options color={colorInstance} controls={controls} />
       )}
-    </motion.div>
+    </Reorder.Item>
   );
 }
