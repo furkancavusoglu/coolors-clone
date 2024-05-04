@@ -1,5 +1,11 @@
-import React, { Fragment, useCallback, useMemo } from "react";
-import { CopyIcon, LockIcon, CancelIcon, DragIcon } from "@/components/icons";
+import React, { useCallback, useMemo } from "react";
+import {
+  CopyIcon,
+  LockIcon,
+  CancelIcon,
+  DragIcon,
+  OpenIcon,
+} from "@/components/icons";
 import {
   Tooltip,
   TooltipContent,
@@ -14,12 +20,15 @@ import { DragControls } from "framer-motion";
 export default function Options({
   color,
   lockedHexes,
+  setLockedHexes,
   controls,
 }: {
   color: string;
   lockedHexes: string[];
   controls: DragControls;
+  setLockedHexes: (value: string[]) => void;
 }) {
+  const isLocked = lockedHexes?.includes(color);
   const { slug } = useParams<{ slug: string }>();
   const iconColor = handleIconColor(color);
   const router = useRouter();
@@ -52,6 +61,14 @@ export default function Options({
     },
     [toast]
   );
+
+  const handleToggleLock = useCallback(() => {
+    if (lockedHexes.includes(color)) {
+      setLockedHexes(lockedHexes.filter((hex) => hex !== color));
+    } else {
+      setLockedHexes([...lockedHexes, color]);
+    }
+  }, [lockedHexes, color, setLockedHexes]);
 
   return (
     <div className="flex flex-row gap-1 lg:gap-2 lg:flex-col">
@@ -89,14 +106,21 @@ export default function Options({
           <TooltipContent>Drag Color</TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      <TooltipProvider delayDuration={500}>
-        <Tooltip>
-          <TooltipTrigger>
-            <LockIcon currentColor={iconColor} />
-          </TooltipTrigger>
-          <TooltipContent>Lock Color</TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+
+      <div onClick={handleToggleLock}>
+        <TooltipProvider delayDuration={500}>
+          <Tooltip>
+            <TooltipTrigger>
+              {isLocked ? (
+                <LockIcon currentColor={iconColor} />
+              ) : (
+                <OpenIcon currentColor={iconColor} />
+              )}
+            </TooltipTrigger>
+            <TooltipContent>Lock Color</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
     </div>
   );
 }

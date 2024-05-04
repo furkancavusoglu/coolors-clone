@@ -2,23 +2,16 @@
 
 import React, { useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import randomColor from "randomcolor";
+import { generateRandomColors } from "@/lib/utils";
 
 export default function Generate() {
   const router = useRouter();
 
-  const generateRandomColors = useMemo(
-    () =>
-      randomColor({
-        hue: "random",
-        luminosity: "random",
-        count: 5,
-      }),
-    [randomColor]
-  );
-
   const colorsRoute = useMemo(
-    () => generateRandomColors.map((color: string) => color.slice(1)).join("-"),
+    () =>
+      generateRandomColors()
+        .map((color: string) => color.slice(1))
+        .join("-"),
     [generateRandomColors]
   );
 

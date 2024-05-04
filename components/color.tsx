@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { colord, extend } from "colord";
 import namesPlugin from "colord/plugins/names";
 import { handleColorTextClass } from "@/lib/utils";
@@ -12,6 +12,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import ReactGPicker from "react-gcolor-picker";
+import { useRouter } from "next/navigation";
 
 export default function Color({
   color,
@@ -29,7 +31,9 @@ export default function Color({
   extend([namesPlugin]);
   const [colorInstance, setColorInstance] = useState<string>(`#${color}`);
   const [draggable, setDraggable] = useState<boolean>(false);
+  const [showColorPicker, setShowColorPicker] = useState<boolean>(false);
   const controls = useDragControls();
+  const router = useRouter();
 
   const colorName = useMemo<string | undefined>(
     () => colord(colorInstance).toName({ closest: true }),
@@ -42,6 +46,16 @@ export default function Color({
   );
 
   const isDesktop = useMediaQuery("(min-width: 1024px)");
+
+  const handleColorChange = useCallback(
+    (color: string) => {
+      const colorIndex = colors.findIndex((hex) => hex === color);
+      colors[colorIndex] = color.slice(1);
+      const newColorSlug = colors.join("-");
+      router.replace(`/colors/${newColorSlug}`);
+    },
+    [setColorInstance, color, colors, router]
+  );
 
   return (
     <Reorder.Item
@@ -56,6 +70,16 @@ export default function Color({
       dragListener={draggable}
       dragControls={controls}
     >
+      {showColorPicker && (
+        <div className="p-2 bottom-28 absolute z-50">
+          <ReactGPicker
+            value={colorInstance}
+            onChange={handleColorChange}
+            format="hex"
+            key={colorInstance}
+          />
+        </div>
+      )}
       <div
         className="lg:absolute lg:items-center lg:pl-0 bottom-14 left-0 
       flex flex-col w-full mb-1 pl-4"
@@ -66,6 +90,7 @@ export default function Color({
               <h3
                 className={`text-xl lg:text-[1.5rem] uppercase font-semibold 
         cursor-pointer text-left ${textColor}`}
+                onClick={() => setShowColorPicker(!showColorPicker)}
               >
                 {colorInstance.replace(/^#/, "")}
               </h3>
@@ -83,10 +108,20 @@ export default function Color({
 
       {isDesktop ? (
         <motion.div variants={columnChildVariant}>
-          <Options color={colorInstance} controls={controls} />
+          <Options
+            color={colorInstance}
+            controls={controls}
+            lockedHexes={lockedHexes}
+            setLockedHexes={setLockedHexes}
+          />
         </motion.div>
       ) : (
-        <Options color={colorInstance} controls={controls} />
+        <Options
+          color={colorInstance}
+          controls={controls}
+          lockedHexes={lockedHexes}
+          setLockedHexes={setLockedHexes}
+        />
       )}
     </Reorder.Item>
   );

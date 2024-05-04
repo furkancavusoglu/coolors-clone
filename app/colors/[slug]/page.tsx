@@ -3,15 +3,17 @@
 import Color from "@/components/color";
 import SubHeader from "@/components/subheader";
 import { Reorder } from "framer-motion";
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { generateRandomColors } from "@/lib/utils";
 
 export default function Colors({ params }: { params: { slug: string } }) {
   const colors: undefined | string[] = params.slug.split("-");
   const [reorderColors, setReorderColors] = useState(colors);
+  const [lockedHexes, setLockedHexes] = useState<string[]>([]);
 
   const isDesktop = useMediaQuery("(min-width: 1024px)");
-  
+
   return (
     <div>
       <SubHeader />
@@ -28,6 +30,8 @@ export default function Colors({ params }: { params: { slug: string } }) {
             colorIndex={index}
             color={color}
             colors={reorderColors}
+            lockedHexes={lockedHexes}
+            setLockedHexes={setLockedHexes}
           />
         ))}
       </Reorder.Group>
