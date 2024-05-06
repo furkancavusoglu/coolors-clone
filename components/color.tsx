@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/tooltip";
 import ReactGPicker from "react-gcolor-picker";
 import { useRouter } from "next/navigation";
+import { useClickOutside } from "@/hooks/useClickOutside";
+import { Drawer, DrawerContent, DrawerTrigger } from "./ui/drawer";
 
 export default function Color({
   color,
@@ -34,6 +36,7 @@ export default function Color({
   const [showColorPicker, setShowColorPicker] = useState<boolean>(false);
   const controls = useDragControls();
   const router = useRouter();
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   const colorName = useMemo<string | undefined>(
     () => colord(colorInstance).toName({ closest: true }),
@@ -45,17 +48,23 @@ export default function Color({
     [colorInstance]
   );
 
-  const isDesktop = useMediaQuery("(min-width: 1024px)");
-
   const handleColorChange = useCallback(
-    (color: string) => {
+    (value: string) => {
       const colorIndex = colors.findIndex((hex) => hex === color);
-      colors[colorIndex] = color.slice(1);
+      colors[colorIndex] = value.slice(1);
       const newColorSlug = colors.join("-");
       router.replace(`/colors/${newColorSlug}`);
     },
     [setColorInstance, color, colors, router]
   );
+
+  const onClickOutside = () => {
+    if (isDesktop) {
+      setShowColorPicker(false);
+    }
+  };
+
+  const ref = useClickOutside(onClickOutside);
 
   return (
     <Reorder.Item
@@ -69,8 +78,9 @@ export default function Color({
       value={color}
       dragListener={draggable}
       dragControls={controls}
+      ref={ref}
     >
-      {showColorPicker && (
+      {showColorPicker && isDesktop && (
         <div className="p-2 bottom-28 absolute z-50">
           <ReactGPicker
             value={colorInstance}
@@ -79,6 +89,22 @@ export default function Color({
             key={colorInstance}
           />
         </div>
+      )}
+      {showColorPicker && !isDesktop && (
+        <Drawer>
+          <DrawerTrigger>Open</DrawerTrigger>
+          <DrawerContent>
+            <div className="mx-auto py-2">
+              <ReactGPicker
+                value={colorInstance}
+                onChange={handleColorChange}
+                format="hex"
+                key={colorInstance}
+                popupWidth={window.innerWidth - 50}
+              />
+            </div>
+          </DrawerContent>
+        </Drawer>
       )}
       <div
         className="lg:absolute lg:items-center lg:pl-0 bottom-14 left-0 
