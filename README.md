@@ -39,3 +39,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 -bugs
 
 -Selecting two colors with the same hex.
+-Tooltips on mobile is not working correctly.
+-Drawer inside tooltip gives an error for button inside button hydration problem.

@@ -90,22 +90,6 @@ export default function Color({
           />
         </div>
       )}
-      {showColorPicker && !isDesktop && (
-        <Drawer>
-          <DrawerTrigger>Open</DrawerTrigger>
-          <DrawerContent>
-            <div className="mx-auto py-2">
-              <ReactGPicker
-                value={colorInstance}
-                onChange={handleColorChange}
-                format="hex"
-                key={colorInstance}
-                popupWidth={window.innerWidth - 50}
-              />
-            </div>
-          </DrawerContent>
-        </Drawer>
-      )}
       <div
         className="lg:absolute lg:items-center lg:pl-0 bottom-14 left-0 
       flex flex-col w-full mb-1 pl-4"
@@ -118,7 +102,26 @@ export default function Color({
         cursor-pointer text-left ${textColor}`}
                 onClick={() => setShowColorPicker(!showColorPicker)}
               >
-                {colorInstance.replace(/^#/, "")}
+                {isDesktop ? (
+                  colorInstance.replace(/^#/, "")
+                ) : (
+                  <Drawer>
+                    <DrawerTrigger>
+                      {colorInstance.replace(/^#/, "")}
+                    </DrawerTrigger>
+                    <DrawerContent>
+                      <div className="mx-auto py-2">
+                        <ReactGPicker
+                          value={colorInstance}
+                          onChange={handleColorChange}
+                          format="hex"
+                          key={colorInstance}
+                          popupWidth={window.innerWidth - 50}
+                        />
+                      </div>
+                    </DrawerContent>
+                  </Drawer>
+                )}
               </h3>
             </TooltipTrigger>
             <TooltipContent>Select Color</TooltipContent>
