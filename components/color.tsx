@@ -58,11 +58,11 @@ export default function Color({
     [setColorInstance, color, colors, router]
   );
 
-  const onClickOutside = () => {
+  const onClickOutside = useCallback(() => {
     if (isDesktop) {
       setShowColorPicker(false);
     }
-  };
+  }, [isDesktop]);
 
   const ref = useClickOutside(onClickOutside);
 
