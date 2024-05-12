@@ -12,7 +12,7 @@ export default function Generate() {
       generateRandomColors()
         .map((color: string) => color.slice(1))
         .join("-"),
-    [generateRandomColors]
+    []
   );
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export default function Generate() {
     }, 2000);
 
     return () => clearTimeout(timeout);
-  }, []);
+  }, [colorsRoute, router]);
 
   return (
     <div

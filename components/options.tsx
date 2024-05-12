@@ -42,7 +42,7 @@ export default function Options({
       );
       router.replace(`/colors/${newColors.join("-")}`);
     },
-    [colors, router, color]
+    [colors, router]
   );
 
   const handleCopyColor = useCallback(

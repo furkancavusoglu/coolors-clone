@@ -40,7 +40,7 @@ export default function Color({
 
   const colorName = useMemo<string | undefined>(
     () => colord(colorInstance).toName({ closest: true }),
-    [colorInstance, colord]
+    [colorInstance]
   );
 
   const textColor = useMemo<string>(
@@ -55,7 +55,7 @@ export default function Color({
       const newColorSlug = colors.join("-");
       router.replace(`/colors/${newColorSlug}`);
     },
-    [setColorInstance, color, colors, router]
+    [color, colors, router]
   );
 
   const onClickOutside = useCallback(() => {
