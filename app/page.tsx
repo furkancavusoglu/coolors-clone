@@ -30,7 +30,7 @@ export default function Home() {
         );
       }
     },
-    [animate, getRandomColor]
+    [animate, getRandomColor, scope]
   );
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export default function Home() {
     animateWithRandomColors(".third");
     animateWithRandomColors(".fourth");
     animateWithRandomColors(".fifth");
-  }, []);
+  }, [animateWithRandomColors]);
   return (
     <main className="flex lg:flex-row flex-col-reverse items-center justify-around lg:p-24">
       <motion.div
