@@ -5,6 +5,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { colord, extend } from "colord";
+import namesPlugin from "colord/plugins/names";
+import { handleColorTextClass, handleIconColor } from "@/lib/utils";
+
+extend([namesPlugin]);
 
 export default function ViewDialog({
   open,
@@ -17,6 +22,8 @@ export default function ViewDialog({
 }) {
   const [viewColor, setViewColor] = useState(`#${colors[0]}`);
 
+  const colorTextLumi = handleColorTextClass(viewColor);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
@@ -24,19 +31,54 @@ export default function ViewDialog({
           <DialogTitle>Quick View</DialogTitle>
         </DialogHeader>
         <div
-          className="w-full h-40 rounded"
+          className={`no-scrollbar overflow-auto max-h-52 font-medium m-0 p-3 w-full ${colorTextLumi}`}
           style={{ backgroundColor: viewColor }}
-        ></div>
+        >
+          <div className="p-[12px] cursor-pointer rounded-lg hover:bg-[#ffffff0d] ">
+            <h4 className="text-xs opacity-[0.4] mb-2 uppercase ">name</h4>
+            <p className="text-sm font-medium capitalize">
+              ~{colord(viewColor).toName({ closest: true })}
+            </p>
+          </div>
+          <div className="p-[12px] cursor-pointer rounded-lg hover:bg-[#ffffff0d] ">
+            <h4 className="text-xs opacity-[0.4] mb-2 uppercase ">Hex</h4>
+            <p className="text-sm font-medium">{colord(viewColor).toHex()}</p>
+          </div>
+
+          <div className="p-[12px] cursor-pointer rounded-lg hover:bg-[#ffffff0d] ">
+            <h4 className="text-xs opacity-[0.4] mb-2 uppercase ">HSL</h4>
+            <p className="text-sm font-medium">
+              {colord(viewColor).toHslString()}
+            </p>
+          </div>
+
+          <div className="p-[12px] cursor-pointer rounded-lg hover:bg-[#ffffff0d] ">
+            <h4 className="text-xs opacity-[0.4] mb-2 uppercase ">RGB</h4>
+            <p className="text-sm font-medium">
+              {colord(viewColor).toRgbString()}
+            </p>
+          </div>
+        </div>
         <div className="flex">
-          {colors.map((color: string, index: number) => (
-            <button
-              className={`h-16 w-1/5 ${index === 0 ? "rounded-l" : ""} ${
-                index === colors.length - 1 ? "rounded-r" : ""
-              }`}
+          {colors.map((color: string) => (
+            <div
+              className={`cursor-pointer flex-1 flex justify-center items-center 
+              h-16 w-fit first:rounded-l-lg last:rounded-r-lg`}
               key={color}
               style={{ backgroundColor: `#${color}` }}
               onClick={() => setViewColor(`#${color}`)}
-            ></button>
+            >
+              {viewColor === `#${color}` && (
+                <div
+                  className={`h-2 w-2 rounded-full 
+                ${
+                  handleIconColor(`#${color}`) === "white"
+                    ? "bg-white"
+                    : "bg-black"
+                }`}
+                ></div>
+              )}
+            </div>
           ))}
         </div>
       </DialogContent>
