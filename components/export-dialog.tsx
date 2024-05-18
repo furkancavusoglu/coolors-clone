@@ -31,7 +31,7 @@ export default function ExportDialog({
     copy(url);
     toast({ description: "URL copied to clipboard" });
     setOpen(false);
-  }, [copy, toast]);
+  }, [copy, toast, setOpen]);
 
   const exportPdfHandler = useCallback(() => {
     toPDF();
@@ -55,7 +55,7 @@ export default function ExportDialog({
         console.error("Error exporting image", err);
       });
     setOpen(false);
-  }, [targetRef, toPng, setOpen]);
+  }, [targetRef, setOpen, toast]);
 
   const handleExportSVG = useCallback(() => {
     if (targetRef.current === null) {
@@ -73,7 +73,7 @@ export default function ExportDialog({
         console.error("Error exporting SVG", err);
       });
     setOpen(false);
-  }, [targetRef, toSvg, setOpen]);
+  }, [targetRef, setOpen, toast]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
