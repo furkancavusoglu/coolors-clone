@@ -6,9 +6,11 @@ import Image from "next/image";
 export default function SubHeader({
   setViewOpen,
   setSaveOpen,
+  setExportOpen,
 }: {
   setViewOpen: Dispatch<SetStateAction<boolean>>;
   setSaveOpen: Dispatch<SetStateAction<boolean>>;
+  setExportOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   const toggleView = useCallback(() => {
     setViewOpen((prev: boolean) => !prev);
@@ -17,6 +19,10 @@ export default function SubHeader({
   const toggleSave = useCallback(() => {
     setSaveOpen((prev: boolean) => !prev);
   }, [setSaveOpen]);
+
+  const toggleExport = useCallback(() => {
+    setExportOpen((prev: boolean) => !prev);
+  }, [setExportOpen]);
 
   return (
     <div className="flex items-center justify-between min-h-[theme('spacing.subheaderHeight')] px-4 py-4 z-[5] shadow-sm">
@@ -35,6 +41,12 @@ export default function SubHeader({
           className="flex items-center gap-1 px-2 py-1 rounded-md hover:bg-[#f2f2f3]"
         >
           <Image src={heart} alt="view colors" /> <p>Save</p>
+        </button>
+        <button
+          onClick={toggleExport}
+          className="flex items-center gap-1 px-2 py-1 rounded-md hover:bg-[#f2f2f3]"
+        >
+          <Image src={heart} alt="view colors" /> <p>Export</p>
         </button>
       </div>
     </div>
